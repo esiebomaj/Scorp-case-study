@@ -29,47 +29,56 @@ def merge_posts(list_of_posts: List[List[Post]]) -> List[Post]:
 def merge(left:List[Post], right:List[Post])->List[Post]:
     """
     takes 2 sorted list left and right merges the 2 list together 
-    and returns a single sorted list 
+    and returns a single list of posts that is sorted in decending order of created_at
+    if created_at is equal we sort by id
     """
+
     merged = []
 
-    i,j = 0,0
+    # we start the pointers at the end of both list 
+    i = len(left)-1  # pointer for left list
+    j = len(right)-1  # pointer for right list
 
-    while i < len(left) and j < len(right):
 
-        if left[i]["created_at"] < right[j]["created_at"]:
+    while i >= 0 and j >= 0:
+        # for both post we check which has a greater created_at and add it the our merged list (descending order)
+        if left[i]["created_at"] > right[j]["created_at"]: 
             merged.append(left[i])
-            i+=1
+            i = i-1
 
-        elif right[j]["created_at"] < left[i]["created_at"]:
+        elif right[j]["created_at"] > left[i]["created_at"]:
             merged.append(right[j])
-            j+=1
+            j = j-1
 
-        else: #this means that  right[j]["created_at"] and  left[i]["created_at"] are equal 
+        else: 
+            #this means that right[j]["created_at"] and left[i]["created_at"] are equal 
             # Now we have to use the id to determine the order
             if left[i]["id"] < right[j]["id"] :
                 merged.append(left[i])
-                i+=1
+                i = i-1
             else:
                 merged.append(right[j])
-                j+=1
+                j = j-1
 
 
-    if i < len(left):
-        while i < len(left):
+    # if after coming out of the while loop, either i or j is not yet less than 0
+    # that means that we have not finished going through one of the lists
+    #  and the if logic below accounts for that 
+    if i >= 0:
+        while i >= 0:
             merged.append(left[i])
-            i+=1
+            i = i-1
 
-    if j < len(right):
-        while j < len(right):
+    if j >= 0:
+        while j >= 0:
             merged.append(right[j])
-            j+=1
+            j = j-1
 
 
     return merged
 
 
-def merge_posts(list_of_posts: List[List[Post]]) -> List[Post]:
+def merge_posts(list_of_posts: List[List[int]]) -> List[int]:
     """
     We are using recursion to do a buttom up merge sort on the list of lists
 
