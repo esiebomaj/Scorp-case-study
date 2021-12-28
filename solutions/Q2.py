@@ -1,34 +1,11 @@
 from typing import List
-Post = 1
 
+# Note: the main merge post function is in line 60 below. the merge function is an helper that is used in the main function 
 
-# Q2 - Algorithmic design
-def merge_posts(list_of_posts: List[List[Post]]) -> List[Post]:
-
-    result = []
-
-    for list_of_post in list_of_posts:
-        for post in list_of_post:
-            result.append(post)
-
-    result = sorted(result, key=lambda post: post.id) # sort by id
-    result = sorted(result, key=lambda post: post.created_at, reverse=True) # sort by created_at in descendiing order
-
-    return result
-
-    # Things to note 
-    # 1) Sort Stability: In Python Sorts are guaranteed to be stable. That means that when multiple records have the same key, 
-    # their original order is preserved.
-
-    # because of sort stability in python, by first sorting the posts by id and them sorting by created_at 
-    # it ensures that posts with the same created_at are sorted by id in ascending order
-
-    # Link to python docs: https://docs.python.org/3/howto/sorting.html#sort-stability-and-complex-sorts
-
-
+# Helper function
 def merge(left:List[Post], right:List[Post])->List[Post]:
     """
-    takes 2 sorted list left and right merges the 2 list together 
+    takes 2 sorted list left and right, merges the 2 list together 
     and returns a single list of posts that is sorted in decending order of created_at
     if created_at is equal we sort by id
     """
@@ -78,9 +55,12 @@ def merge(left:List[Post], right:List[Post])->List[Post]:
     return merged
 
 
-def merge_posts(list_of_posts: List[List[int]]) -> List[int]:
+
+# Main merge post function
+def merge_posts(list_of_posts: List[List[Post]]) -> List[Post]:
     """
-    We are using recursion to do a buttom up merge sort on the list of lists
+    returns a list of posts sorted by their created_at in descending order
+    We are using a buttom up merge sort algorithm on the list of lists
 
     """
     N = len(list_of_posts)
@@ -102,6 +82,7 @@ def merge_posts(list_of_posts: List[List[int]]) -> List[int]:
             result.append(list_of_posts[i])
     
     # This is a recursive call to merge_posts 
-    # continues merging the list_of_posts until we arrive at the base case
-    # Base case => the list_of_posts has been merged into a single list of posts (returned in line 41)
+    # continues merging the result until we arrive at the base case
+    # Base case => the list_of_posts has been merged into a single list of posts (returned in line 71)
     return merge_posts(result)
+
