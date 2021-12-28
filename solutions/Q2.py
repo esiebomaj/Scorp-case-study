@@ -18,6 +18,13 @@ def merge(left:List[Post], right:List[Post])->List[Post]:
 
 
     while i >= 0 and j >= 0:
+
+        # first we check for duplicates
+        if left[i]["id"] == right[j]["id"] :
+            merged.append(left[i])
+            i = i-1
+            j = j-1
+
         # for both post we check which has a greater created_at and add it the our merged list (descending order)
         if left[i]["created_at"] > right[j]["created_at"]: 
             merged.append(left[i])
@@ -43,13 +50,19 @@ def merge(left:List[Post], right:List[Post])->List[Post]:
     #  and the if logic below accounts for that 
     if i >= 0:
         while i >= 0:
-            merged.append(left[i])
-            i = i-1
+            if left[i]["id"] == left[i+1]["id"]: # duplicates check
+                i = i-1
+            else:
+                merged.append(left[i])
+                i = i-1
 
     if j >= 0:
         while j >= 0:
-            merged.append(right[j])
-            j = j-1
+            if left[i]["id"] == left[i+1]["id"]: # duplicates check
+                i = i-1
+            else:
+                merged.append(right[j])
+                j = j-1
 
 
     return merged
