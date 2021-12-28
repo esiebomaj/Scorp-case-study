@@ -1,6 +1,14 @@
 from typing import List, NamedTuple
 
-# helper functions for db accesss in order not to polute the main function with SQL queries
+
+# Things to note :
+# 1) If it was a real world senario I would probably have used an ORM like sqlAlchemy or django orm depending on the use case
+# this will help abstarct the db queries and also prevent the occurence of things like SQl attact thus improving the application secuirity 
+
+# 2) I have abstracted the db access queries into helper functions in order not to polute the main function with SQL queries
+
+
+# helper functions 
 def get_single_post(post_id:int):
     """
     returns a single post with id = post_id
@@ -17,7 +25,7 @@ def get_post_likes(post_id:int):
     sql = f"SELECT * FROM like WHERE post_id = {post_id}"
     with engine.connect() as connection:
         likes = connection.execute(sql)
-    return likess
+    return likes
 
 def get_post_author(author_id):
     """
