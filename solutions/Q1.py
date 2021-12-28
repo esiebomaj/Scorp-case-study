@@ -3,7 +3,7 @@ from typing import List
 
 # Things to note :
 # 1) If it was a real world senario I would probably have used an ORM like sqlAlchemy or django orm depending on the use case
-# this will help abstarct the db queries and also prevent the occurence of things like SQl attact thus improving the application secuirity 
+# this will help abstarct the db queries and also prevent the occurence of things like an SQl attack thus improving the application secuirity 
 
 # 2) I have abstracted the db access queries into helper functions in order not to polute the main function with SQL queries
 
@@ -46,7 +46,7 @@ def get_following_list(user_id):
 
 
 ############## Q1 - Solution ################
-s
+
 def get_posts(user_id: int, post_ids: List[int]) -> List[Post]:
     '''
     Returns a list of posts corresponding to post_ids
