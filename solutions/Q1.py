@@ -1,4 +1,4 @@
-from typing import List, NamedTuple
+from typing import List
 
 
 # Things to note :
@@ -8,56 +8,54 @@ from typing import List, NamedTuple
 # 2) I have abstracted the db access queries into helper functions in order not to polute the main function with SQL queries
 
 
-# helper functions 
-def get_single_post(post_id:int):
-    """
-    returns a single post with id = post_id
-    """
-    sql = f"SELECT * FROM post WHERE id = {post_id}"
+############ helper functions #######################
+
+# recieves a valid sql query and executes it
+def query_db(sql):
     with engine.connect() as connection:
-        post = connection.execute(sql)
+        items = connection.execute(sql)
+
+    return items
+
+# returns a single post with id = post_id
+def get_single_post(post_id):
+    sql = f"SELECT * FROM post WHERE id = {post_id}"
+    post = query_db(sql)
     return post
 
-def get_post_likes(post_id:int):
-    """
-    returns all likes for a post with id = post_id
-    """
-    sql = f"SELECT * FROM like WHERE post_id = {post_id}"
-    with engine.connect() as connection:
-        likes = connection.execute(sql)
+# returns all likes for a post with id = post_id
+def get_post_likes(post_id):
+    sql = f"SELECT user_id FROM like WHERE post_id = {post_id}"
+    likes = query_db(sql)
     return likes
 
-def get_post_author(author_id):
-    """
-    returns all likes for a post with id = post_id
-    """
-    sql = f"SELECT * FROM user WHERE id = {author_id}"
-    with engine.connect() as connection:
-        author = connection.execute(sql)
-    return author
+# returns user with id user_id
+def get_user(user_id):
+    sql = f"SELECT * FROM user WHERE id = {user_id}"
+    user = query_db(sql)
+    return user
 
-def get_following_list(user_id:int)->List[int]:
-    """
-    returns list of all users following 
-    """
+# returns list of user ids
+# this user ids corespond to the following of user with id user_id 
+# i.e ids of the users who have been followed by user_id
+def get_following_list(user_id):
     sql = f"SELECT following_id FROM follow WHERE follower_id = {user_id}"
-    with engine.connect() as connection:
-        following = connection.execute(sql)
-
+    following = query_db(sql)
     return following
 
 
 
-# Q1 - Day-to-day programming
+############## Q1 - Solution ################
+s
 def get_posts(user_id: int, post_ids: List[int]) -> List[Post]:
     '''
     Returns a list of posts corresponding to post_ids
     list of posts is in the same order as post ids
     list of post should have null for non existing post_ids
-    query format ====> db_posts = SELECT * FROM post WHERE id IN post_ids
     '''
     post_list = []
 
+    # get the list of all the people the requesting user is following 
     following_list: List[int] = get_following_list(user_id)
 
     for post_id in post_ids:
@@ -79,10 +77,9 @@ def get_posts(user_id: int, post_ids: List[int]) -> List[Post]:
             post.liked = False
 
         # query to get author of each post
-        author = get_post_author(post_id)
+        author = get_user(post.user_id)
 
         # determine if the author is followed by requesting user
-        # get following list for requesting user 
         if author.id in following_list:
             author.followed = True
         else:
